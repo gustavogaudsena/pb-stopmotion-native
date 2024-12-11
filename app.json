@@ -23,6 +23,10 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "TMDB_URL": "https://api.themoviedb.org/",
+      "TMDB_KEY": "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwMTI0YWNiOWYwMDNkNzQyNzljMzE3OWIxMzliYjE2MyIsIm5iZiI6MTcyOTE3ODIxOC40MTE5OTMsInN1YiI6IjY2YTJjOGM1MWU3YjBlOGJmNWRkYTMxMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.CNqmNDGa6Om-lommCvKRUB8f4N6A2xnC_WCUWE7wXBw"
     }
   }
 }
