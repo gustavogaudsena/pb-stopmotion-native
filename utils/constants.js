@@ -5,6 +5,7 @@ export const DEFAULT_SORT_BY = 'popularity.desc'
 export const DISCOVER_MOVIES_URL = '/3/discover/movie'
 export const MOVIE_DETAILS_URL = '/3/movie'
 export const MOVIE_SEARCH_URL = '/3/search/movie'
+export const NEW_TOKEN_URL = '/3/authentication/token/new'
 
 export const IMAGES_BASE_URL = 'https://image.tmdb.org/t/p/'
 

@@ -1,11 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { useAppContext } from '../context/appContext';
 import SearchBar from './searchBar';
+import { useNavigation } from '@react-navigation/native';
+import CameraComponent from './CameraComponent';
 
 
 export default function Header() {
-    const { theme } = useAppContext();
+    const { theme, logout } = useAppContext();
+    const navigation = useNavigation()
+
+    async function handleLogout() {
+       const response = await logout()
+       if (response.success) navigation.navigate('Authentication')
+    }
 
     return (
         <View style={styles.header}>
@@ -23,6 +31,10 @@ export default function Header() {
                     <SearchBar />
                 </View>
             </ImageBackground>
+            
+            <TouchableOpacity onPress={handleLogout} style={[ { backgroundColor: theme.colors.darkGrayOp, }]}>
+                <Text style={[styles.buttonText, { color: theme.colors.primary, textAlign: 'center'  }]}>Sair</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -63,5 +75,18 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: 18,
         fontWeight: 'bold',
+    },
+    button: {
+        backgroundColor: '#014f15',
+        paddingVertical: 5,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+        marginBottom: 10,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
     },
 });

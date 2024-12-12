@@ -1,16 +1,17 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AuthenticationScreen from '../screens/AuthenticationScreen';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import HomeScreen from '../screens/HomeScreen';
 import DetalhesScreen from '../screens/DetalhesScreen';
 import { useAppContext } from '../context/appContext';
 import { SafeAreaView, StyleSheet } from 'react-native';
+import HandleAccess from '../components/HandleAccess';
 
 export const MOCK_USER = [
     {
-        username: 'usuario_teste',
-        password: '123456'
+        email: 'fake_email@gmail.com',
+        password: 'mystrongpassword'
     }
 ]
 
@@ -18,15 +19,15 @@ const Stack = createNativeStackNavigator();
 
 export default function Navigation() {
     const [usersDB, setUsersDB] = useState(MOCK_USER)
-    const { theme } = useAppContext()
-
+    
     return (
         <SafeAreaView style={[styles.container]}>
             <NavigationContainer>
+                <HandleAccess />
                 <Stack.Navigator initialRouteName="Authentication" screenOptions={{ headerShown: false }} >
                     <Stack.Screen name="Authentication" options={({ navigation }) => ({
                         headerShown: false,
-                        title: 'Github'
+                        title: 'Autenticação'
                     })}>
                         {(props) => <AuthenticationScreen usersDB={usersDB} setUsersDB={setUsersDB} {...props} />}
                     </Stack.Screen>

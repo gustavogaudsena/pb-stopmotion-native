@@ -10,6 +10,7 @@ export default function MovieList() {
         fetchMovies()
     }, [])
     return (
+
         <View style={styles.container}>
             <MovieListController />
             {movies.length ? (
@@ -26,6 +27,7 @@ export default function MovieList() {
                 </Text>
             )}
         </View>
+
     );
 }
 

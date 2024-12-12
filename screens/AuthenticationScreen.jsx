@@ -1,46 +1,54 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Alert, Image, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, Image, TouchableOpacity, Linking } from 'react-native';
 import { Constants } from 'expo-constants';
 import { useAppContext } from '../context/appContext';
 
 const AuthenticationScreen = ({ navigation, usersDB, setUsersDB }) => {
-    const [username, setUsername] = useState(usersDB[0].username);
+    const [email, setEmail] = useState(usersDB[0].email);
     const [password, setPassword] = useState(usersDB[0].password);
+    const [token, setToken] = useState(null);
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [register, setRegister] = useState(false);
-    const { theme } = useAppContext()
+    const [registerScreen, setRegisterScreen] = useState(false);
+    const { theme, login, register, } = useAppContext()
 
-    const handleLogin = () => {
+
+    const handleLogin = async () => {
+
+        const { data, error } = await login({ email, password });
+        if (error) return Alert.alert('Erro', 'Credenciais inválidas!');
         return navigation.navigate('Home')
-        if (Array.from(usersDB).some((user) => user.username.toUpperCase() === username.toUpperCase() && user.password === password)) navigation.navigate('ListaTransacoes');
-        else Alert.alert('Erro de autenticação', 'Nome de usuário ou senha inválidos.');
+       
     };
 
-    const handleRegister = () => {
-        if (!username || username.length < 3) return Alert.alert('Erro de registro', 'Nome de usuário inválido.');
+    const handleRegister = async () => {
+        if (!email || email.length < 3) return Alert.alert('Erro de registro', 'Email inválido.');
         if (!password || password.length < 6) return Alert.alert('Erro de registro', 'Senha inválida.');
         if (password !== confirmPassword) return Alert.alert('Erro de registro', 'Senhas não correspondem');
-        if (Array.from(usersDB).some((user) => user.username === username)) return Alert.alert('Erro de registro', 'Nome de usuário já cadastrado.');
-        const newUser = { username, password }
-        const newDB = [...usersDB, newUser]
-        setUsersDB(newDB)
-        Alert.alert('Sucesso!', 'Usuário registrado!');
-        setUsername('');
-        setPassword('');
-        setConfirmPassword('');
-        setRegister(false);
+        const credenciais = { email, password }
+        const { data, error } = await register(credenciais)
+        console.log(data)
+        console.log(error)
+        if (error) return Alert.alert('Erro', 'Credenciais inválidas!');
+        else {
+            Alert.alert('Sucesso!', 'Usuário registrado!');
+            setEmail('');
+            setPassword('');
+            setConfirmPassword('');
+            setRegisterScreen(false);
+        }
     };
 
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.gray }]}>
             <Image source={require('../assets/login-avatar.png')} style={styles.avatar} />
             <Text style={[styles.title, { color: theme.colors.primary }]}>Stop Motion World</Text>
-            <Text style={[styles.authTitle, { color: theme.colors.primary }]}>{register ? 'Registrar' : 'Login'}</Text>
+            <Text style={[styles.authTitle, { color: theme.colors.primary }]}>{registerScreen ? 'Registrar' : 'Login'}</Text>
+
             <TextInput
                 style={[styles.input, { borderColor: theme.colors.darkGray, color: theme.colors.darkGray }]}
-                placeholder="Nome de usuário"
-                value={username}
-                onChangeText={setUsername}
+                placeholder="E-mail"
+                value={email}
+                onChangeText={setEmail}
                 placeholderTextColor={theme.colors.darkGray}
             />
             <TextInput
@@ -52,7 +60,7 @@ const AuthenticationScreen = ({ navigation, usersDB, setUsersDB }) => {
                 placeholderTextColor={theme.colors.darkGray}
             />
             {
-                register &&
+                registerScreen &&
                 <>
                     <TextInput
                         style={[styles.input, { borderColor: theme.colors.darkGray, color: theme.colors.darkGray }]}
@@ -62,21 +70,21 @@ const AuthenticationScreen = ({ navigation, usersDB, setUsersDB }) => {
                         secureTextEntry
                         placeholderTextColor={theme.colors.darkGray}
                     />
-                    <TouchableOpacity style={[styles.button, { backgroundColor: theme.colors.primary }]}  onPress={handleRegister}>
+                    <TouchableOpacity style={[styles.button, { backgroundColor: theme.colors.primary }]} onPress={handleRegister}>
                         <Text style={[styles.buttonText, { color: theme.colors.gray }]}>Registrar</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setRegister(false)}>
+                    <TouchableOpacity onPress={() => setRegisterScreen(false)}>
                         <Text style={[styles.buttonText, { color: theme.colors.primary }]}>Voltar</Text>
                     </TouchableOpacity>
                 </>
             }
             {
-                !register &&
+                !registerScreen &&
                 <>
                     <TouchableOpacity style={[styles.button, { backgroundColor: theme.colors.primary }]} onPress={handleLogin}>
-                        <Text style={[styles.buttonText, { color: theme.colors.gray }]}>Entrar</Text>
+                        <Text style={[styles.buttonText, { color: theme.colors.gray }]}>Login</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setRegister(true)}>
+                    <TouchableOpacity onPress={() => setRegisterScreen(true)}>
                         <Text style={[styles.buttonText, { color: theme.colors.primary }]}>Registrar</Text>
                     </TouchableOpacity>
                 </>

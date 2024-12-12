@@ -16,6 +16,26 @@ export default function AppProvider({ children }) {
     const [sortBy, setSortBy] = useState(SORT_TYPES_MAP.default.value)
 
 
+    const login = async ({ email, password }) => {
+        const { data, error } = await apiService.login({ email, password });
+        return { data, error }
+    };
+
+    const register = async ({ email, password }) => {
+        const { data, error } = await apiService.register({ email, password });
+        return { data, error }
+    };
+
+    const getSession = async () => {
+        const { session, user } = await apiService.getSession();
+        return { session, user }
+    };
+
+    const logout = async () => {
+        const success = await apiService.logout();
+        return { success }
+    };
+
     const fetchMovies = async (options) => {
         const { movies, page, total_pages, ..._ } = await apiService.getMovieList(options);
         setMovies(movies)
@@ -106,8 +126,13 @@ export default function AppProvider({ children }) {
         movieList,
         orderBy,
         sortBy,
-        getMovieById
+        getMovieById,
+        login,
+        register,
+        getSession,
+        logout
     }
+
     return (
         <AppContext.Provider value={sharedStated}>
             {children}
